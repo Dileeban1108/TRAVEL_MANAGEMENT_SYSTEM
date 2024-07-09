@@ -1,0 +1,53 @@
+.main-home-container {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aliceblue;
+}
+.home-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 90%;
+  height: 80%;
+  border-radius: 5px;
+  padding: 10px;
+}
+.view-more {
+  display: flex;
+  align-items: end;
+  cursor: pointer; 
+  height: 350px;
+  width: 400px;
+  justify-content: center;
+  box-shadow: 0 0 5px gray;
+  padding: 30px;
+}
+.view-more.bus2 {
+  background: url("../assets/bus9.png") no-repeat;
+  background-size: contain;
+}
+.view-more.bus3 {
+  background: url("../assets/bus3.png") no-repeat;
+  background-size: contain;
+}
+.bus-text {
+  box-shadow: 0 0 5px gray;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 2rem;
+  color: rgb(255, 102, 0);
+}
+.empty{
+  height: 200px;
+  width: 100%;
+  background: url("../assets/bus5.jpg") no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}

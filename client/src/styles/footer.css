@@ -1,0 +1,84 @@
+.footer {
+  display: flex;
+  flex-direction: column;
+  background: #4c4c4d; /* Medical-themed blue */
+  text-align: center;
+  font-family: sans-serif;
+  color: white; /* White text */
+  width: 100%;
+}
+
+.footer-content {
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* Center align items */
+  padding: 1rem;
+}
+
+
+@media screen and (max-width: 600px) {
+  .footer-content {
+    font-size: 13px;
+  }
+
+  .icons-list a{
+    font-size: 13px; /* Increase icon size */
+  }
+}
+@media screen and (max-width: 415px) {
+
+  .icons-list a{
+    font-size: 11px; /* Increase icon size */
+  }
+}
+.footer__section {
+  width: 30%; /* Adjust width for sections */
+}
+
+.container_1 {
+  width: 30%; /* Full width */
+}
+
+.container_1 ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0;
+}
+
+.container_1 ul a {
+  color: white;
+  text-decoration: none;
+}
+
+
+
+.footer__heading {
+  font-size: 1.3rem;
+  margin: .5rem;
+}
+
+.footer__copyright {
+  background-color: #222222; /* Darker blue for copyright section */
+  padding: 1rem;
+}
+
+.icons-list {
+  font-size: 18px; /* Increase icon size */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center align icons */
+  gap: 10px; /* Add gap between icons */
+  align-items: center;
+}
+.icons-list a:hover {
+color: rgb(255, 102, 0);
+}
+.icons-list a {
+width: auto;
+border-radius: 50px;
+padding: 1px;
+}
+.list-unstyled li a:hover{
+  color: rgb(255, 102, 0);
+ 
+}
