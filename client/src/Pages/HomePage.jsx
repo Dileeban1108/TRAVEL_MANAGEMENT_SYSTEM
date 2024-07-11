@@ -1,97 +1,95 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import "../styles/homepage.css";
 import Footer from "../components/Footer";
 import MainPage from "./MainPage";
-import AboutUs from "./About";
 import ReviewPage from "./ReviewPage";
-import RootModal from "../components/RootModal";
+import RootBusModal from "../components/RootBusModal";
+import SchoolBusModal from "../components/SchoolBusModal";
+import axios from "axios";
 
 const HomePage = () => {
-  const [rootData, setRootData] = useState([]);
-  const [showAllRoots, setShowAllRoots] = useState(false);
-  const routes = [
-    {
-      name: "Colombo - Gampaha",
-      departure: "Colombo",
-      departureTime: "10:30 AM",
-      arrival: "Gampaha",
-      arrivalTime: "12:00 PM",
-    },
-    {
-      name: "Gampaha - Colombo",
-      departure: "Gampaha",
-      departureTime: "1:30 PM",
-      arrival: "Colombo",
-      arrivalTime: "3:00 PM",
-    },
-    {
-      name: "Kandy - Colombo",
-      departure: "Kandy",
-      departureTime: "8:00 AM",
-      arrival: "Colombo",
-      arrivalTime: "11:00 AM",
-    },
-    {
-      name: "Colombo - Kandy",
-      departure: "Colombo",
-      departureTime: "2:00 PM",
-      arrival: "Kandy",
-      arrivalTime: "5:00 PM",
-    },
-    {
-      name: "Malalpola - Avissavella",
-      departure: "Malalpola",
-      departureTime: "10:30 AM",
-      arrival: "Avissavella",
-      arrivalTime: "12:00 PM",
-    },
-    {
-      name: "Avissavella - Malalpola",
-      departure: "Avissavella",
-      departureTime: "1:30 PM",
-      arrival: "Malalpola",
-      arrivalTime: "3:00 PM",
-    },
-  ];
+  const [showRootBusModal, setShowRootBusModal] = useState(false);
+  const [showSchoolBusModal, setShowSchoolBusModal] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+  const [userDetails, setUserDetails] = useState({});
+  const handleNavigate1 = () => {
+    setShowRootBusModal(true);
+    setShowSchoolBusModal(false); // Ensure only one modal is open at a time
+  };
 
+  const handleNavigate2 = () => {
+    setShowSchoolBusModal(true);
+    setShowRootBusModal(false); // Ensure only one modal is open at a time
+  };
+
+  const handleCloseModal1 = () => {
+    setShowRootBusModal(false);
+  };
+
+  const handleCloseModal2 = () => {
+    setShowSchoolBusModal(false);
+  };
   useEffect(() => {
-    const fetchRoots = async () => {
+    const fetchUserRole = async () => {
       try {
-        const result = routes;
-        setRootData(result);
+        const userinfo = JSON.parse(localStorage.getItem("userinfo"));
+        if (userinfo && userinfo.email) {
+          const email = userinfo.email;
+
+          const schoolBusResponse = await axios.get(
+            `http://localhost:3001/auth/getSchoolBus/${email}`
+          );
+
+          if (schoolBusResponse.data) {
+            setUserRole("schoolbus");
+            setUserDetails(schoolBusResponse.data);
+            return;
+          }
+
+          const rootBusResponse = await axios.get(
+            `http://localhost:3001/auth/getRootBus/${email}`
+          );
+
+          if (rootBusResponse.data) {
+            setUserRole("rootbus");
+            setUserDetails(rootBusResponse.data);
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch roots:", error);
+        console.error("Failed to fetch user role:", error);
       }
     };
-    fetchRoots();
-  }, []);
 
-  const handleViewMore = () => {
-    setShowAllRoots(!showAllRoots);
-  };
+    fetchUserRole();
+  }, []);
 
   return (
     <section className="home">
-      <MainPage id="main" />
-      <div className="empty"></div>
+      {!showRootBusModal && !showSchoolBusModal && (
+        <>
+          <MainPage id="main" userRole={userRole} userDetails={userDetails}/>
+          <div className="empty"></div>
 
-      <div className="main-home-container">
-        <div className="home-container">
-          <div className="view-more bus3" onClick={handleViewMore}>
-            <div className="bus-text">School Buses</div>
+          <div className="main-home-container">
+            <div className="home-container">
+              <div className="view-more bus3" onClick={handleNavigate2}>
+                <div className="bus-text">School Buses</div>
+              </div>
+              <div className="view-more bus2" onClick={handleNavigate1}>
+                <div className="bus-text">Root Buses</div>
+              </div>
+            </div>
           </div>
-          <div className="view-more bus2" onClick={handleViewMore}>
-            <div className="bus-text">Root Buses</div>
-          </div>
-        </div>
-      </div>
 
-      {showAllRoots && <RootModal roots={rootData} onClose={handleViewMore} />}
-      <div className="ultracontainer">
-        <AboutUs id="aboutus" />
-        <ReviewPage id="reviews" />
-        <Footer />
-      </div>
+          <div className="ultracontainer">
+            <ReviewPage id="reviews" userRole={userRole} userDetails={userDetails}/>
+            <Footer />
+          </div>
+        </>
+      )}
+
+      {showRootBusModal && <RootBusModal onClose={handleCloseModal1} />}
+      {showSchoolBusModal && <SchoolBusModal onClose={handleCloseModal2} />}
     </section>
   );
 };

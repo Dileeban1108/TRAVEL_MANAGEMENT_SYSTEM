@@ -4,78 +4,142 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import users from "../assets/users.jpg";
 
-const ProfileModal = ({ show, onClose, doctorDetails }) => {
+const ProfileModal = ({ show, onClose, userDetails }) => {
   const navigate = useNavigate();
+  const [idFrontImage, setIdFrontImage] = useState(null);
+  const [idBackImage, setIdBackImage] = useState(null);
+  const [busImage, setBusImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(users);
+  const [imagePreview1, setImagePreview1] = useState(users);
+  const [imagePreview2, setImagePreview2] = useState(users);
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
+    phone: "",
     address: "",
-    registerNumber: "",
-    hospital: "",
-    specializedPath: "",
+    idNumber: "",
+    busNumber: "",
+    chasisNumber: "",
+    password: "",
   });
-  const specializationOptions = [
-    "none",
-    "Eye Specialist",
-    "Skin Specialist",
-    "Ear Specialist",
-    "Heart Specialist",
-    "Liver Specialist",
-    "Kidney Specialist",
-    "Dentist",
-    "Veterinarian",
-    "Radiologist",
-    "Physiotherapist",
-  ];
+
   useEffect(() => {
-    if (doctorDetails) {
+    if (userDetails) {
       setFormData({
-        username: doctorDetails.username,
-        email: doctorDetails.email,
+        username: userDetails.username,
+        email: userDetails.email,
+        phone: userDetails.phone,
+        address: userDetails.address,
+        idNumber: userDetails.idNumber,
+        busNumber: userDetails.busNumber,
+        chasisNumber: userDetails.chasisNumber,
         password: "",
-        address: doctorDetails.address,
-        registerNumber: doctorDetails.regnumber,
-        hospital: doctorDetails.hospital,
-        specializedPath: doctorDetails.specialization,
       });
+      setImagePreview(userDetails.idFrontImage || users);
+      setImagePreview1(userDetails.idBackImage || users);
+      setImagePreview2(userDetails.busImage || users);
     }
-  }, [doctorDetails]);
+  }, [userDetails]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    const file = files[0];
+    if (file && file.type.startsWith("image/")) {
+      if (name === "idFrontImage") {
+        setIdFrontImage(file);
+        setImagePreview(URL.createObjectURL(file));
+      }
+      if (name === "idBackImage") {
+        setIdBackImage(file);
+        setImagePreview1(URL.createObjectURL(file));
+      }
+      if (name === "busImage") {
+        setBusImage(file);
+        setImagePreview2(URL.createObjectURL(file));
+      }
+    } else {
+      toast.error("Please upload a valid image file");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.put(
-        "http://localhost:3001/register/update",
-        {
-          username: formData.username,
-          password: formData.password,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          regnumber: formData.registerNumber,
-          hospital: formData.hospital,
-          specialization: formData.specializedPath,
-        }
+      let idFrontImageUrl = userDetails.idFrontImage || "";
+      let idBackImageUrl = userDetails.idBackImage || "";
+      let busImageUrl = userDetails.busImage || "";
+
+      if (idFrontImage || idBackImage || busImage) {
+        const uploadFormData = new FormData();
+        if (idFrontImage) uploadFormData.append("idFrontImage", idFrontImage);
+        if (idBackImage) uploadFormData.append("idBackImage", idBackImage);
+        if (busImage) uploadFormData.append("busImage", busImage);
+        const uploadResponse = await axios.post(
+          "http://localhost:3001/upload",
+          uploadFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        idFrontImageUrl = uploadResponse.data.idFrontImage || idFrontImageUrl;
+        idBackImageUrl = uploadResponse.data.idBackImage || idBackImageUrl;
+        busImageUrl = uploadResponse.data.busImage || busImageUrl;
+      }
+
+      // Prepare data to update
+      const updatedData = {
+        email: formData.email,
+        password: formData.password,
+        idFrontImage: idFrontImageUrl,
+        idBackImage: idBackImageUrl,
+        busImage: busImageUrl,
+        username: formData.username,
+        phone: formData.phone,
+        address: formData.address,
+        idNumber: formData.idNumber,
+        chasisNumber: formData.chasisNumber,
+        busNumber: formData.busNumber,
+      };
+
+      // Update user profile only if any field has been updated
+      const hasChanged = Object.keys(updatedData).some(
+        (key) => updatedData[key] !== userDetails[key]
       );
 
-      toast.success("Successfully Updated The Profile!");
-      navigate("/");
-      window.location.reload(); // Reload the window after navigation
+      if (hasChanged) {
+        const updateResponse = await axios.put(
+          "http://localhost:3001/auth/updateSchoolBus",
+          updatedData
+        );
+
+        toast.success("Successfully updated!");
+        setTimeout(() => {
+          onClose(); // Close the modal
+          window.location.reload();
+        }, 1000);
+
+        console.log(updateResponse.data); // Handle the response as needed
+      } else {
+        toast.info("No changes to update.");
+      }
     } catch (error) {
-      console.error(
-        "Failed to update profile",
-        error.response ? error.response.data : error.message
-      );
-      toast.error("Failed to update profile");
+      toast.error("Error updating profile");
+
+      console.error("Error updating profile:", error);
     }
   };
 
@@ -86,80 +150,99 @@ const ProfileModal = ({ show, onClose, doctorDetails }) => {
   return (
     <div className="modal-overlay">
       <ToastContainer position="top-right" />
+
       <div className="modal-content_6">
-        <h2>Update Profile</h2>
+        <div className="cards">
+          <h2>Update Profile</h2>
+          <button className="cancel_button_2" onClick={onClose}>
+            X
+          </button>
+        </div>
         <form onSubmit={handleSubmit}>
-          <div className="inputs">
-            <label>Name:</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-            />
+          <div className="update_profile_section">
+            <img src={imagePreview} alt="ID Front" />
+            <label htmlFor="id_front">Add New Front ID Image</label>
           </div>
-          <div className="inputs">
-            <label>Password:</label>
-            <input
-              type="text"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
+          <input
+            id="id_front"
+            className="profile-image"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            name="idFrontImage"
+          />
+          <div className="update_profile_section">
+            <img src={imagePreview1} alt="ID Back" />
+            <label htmlFor="id_back">Add New Back ID Image</label>
           </div>
-          <div className="inputs">
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              readOnly
-            />
+          <input
+            id="id_back"
+            className="profile-image"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            name="idBackImage"
+          />
+          <div className="update_profile_section">
+            <img src={imagePreview2} alt="Bus Image" />
+            <label htmlFor="bus_image">Add New Bus=Image</label>
           </div>
-          <div className="inputs">
-            <label>Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="inputs">
-            <label>Register Number:</label>
-            <input
-              type="text"
-              name="registerNumber"
-              value={formData.registerNumber}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="inputs">
-            <label>Hospital:</label>
-            <input
-              type="text"
-              name="hospital"
-              value={formData.hospital}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="inputs">
-            <label>Specialized Path:</label>
-            <select
-              name="specializedPath"
-              value={formData.specializedPath}
-              onChange={handleChange}
-            >
-              {specializationOptions.map((option, index) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button type="submit">Update</button>
-          <button type="button" onClick={onClose}>
-            Cancel
+          <input
+            id="bus_image"
+            className="profile-image"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            name="busImage"
+          />
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+          <input
+            className="input"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Enter new password"
+          />
+          <input type="email" name="email" value={formData.email} readOnly />
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="idNumber"
+            value={formData.idNumber}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="busNumber"
+            value={formData.busNumber}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="chasisNumber"
+            value={formData.chasisNumber}
+            onChange={handleChange}
+          />
+
+          <button type="submit" className="submit">
+            Update
           </button>
         </form>
       </div>

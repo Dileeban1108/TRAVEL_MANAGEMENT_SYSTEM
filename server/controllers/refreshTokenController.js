@@ -1,4 +1,5 @@
-const User = require('../models/Doctor');
+const SchoolBus = require('../models/SchoolBus');
+const RootBus = require('../models/RootBus');
 const jwt = require('jsonwebtoken');
 
 const handleRefreshToken = async (req, res, next) => {
@@ -14,7 +15,7 @@ const handleRefreshToken = async (req, res, next) => {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
     // Find the user associated with the refresh token
-    const foundUser = await Doctor.findOne({ refreshToken }).exec();
+    const foundUser = await SchoolBus.findOne({ refreshToken })|| await SchoolBus.findOne({ refreshToken }) .exec();
     if (!foundUser || foundUser.username !== decoded.username) {
       return res.sendStatus(403); // Forbidden
     }

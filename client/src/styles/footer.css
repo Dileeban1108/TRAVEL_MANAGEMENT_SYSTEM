@@ -13,7 +13,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around; /* Center align items */
-  padding: 1rem;
+  padding: 10px;
 }
 
 
@@ -40,13 +40,16 @@
   width: 30%; /* Full width */
 }
 
-.container_1 ul {
+.container_1 .list-unstyled {
   list-style-type: none; /* Remove bullet points */
   padding: 0;
+  border: none;
+  height: auto;
+  overflow: hidden;
 }
 
-.container_1 ul a {
-  color: white;
+
+.container_1 .list-unstyled a {
   text-decoration: none;
 }
 
@@ -67,8 +70,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center; /* Center align icons */
-  gap: 10px; /* Add gap between icons */
   align-items: center;
+  border: none;
+  height: auto;
+  gap: 10px;
+  overflow: hidden;
 }
 .icons-list a:hover {
 color: rgb(255, 102, 0);
@@ -77,6 +83,7 @@ color: rgb(255, 102, 0);
 width: auto;
 border-radius: 50px;
 padding: 1px;
+color: rgb(255, 255, 255);
 }
 .list-unstyled li a:hover{
   color: rgb(255, 102, 0);

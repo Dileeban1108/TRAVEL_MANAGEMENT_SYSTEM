@@ -1,27 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
-router.post("/login", authController.handleLogin);
-router.post("/createHospital", authController.handleNewHospital);
-router.post("/createReview", authController.createReview);
-router.post("/createDisease", authController.handleNewDisease);
-router.post("/createMedicine", authController.handleNewMedicine);
-router.post("/createHealthTip", authController.handleNewHealthTip);
-router.post("/bookDoctor", authController.bookDoctor);
-router.get("/getDoctor/:email", authController.getDoctorByEmail);
-router.get("/getDoctors/:specialization", authController.getDoctorByRole);
-router.get("/getDisease", authController.getDisease);
-router.get("/getHealthTips", authController.getHealthTips);
-router.get("/getMedicines", authController.getMedicines);
-router.get("/getHospitals", authController.getHospitals);
+
+router.get("/getSchoolBuses", authController.getSchoolBuses);
+router.get("/getRootBuses", authController.getRootBuses);
 router.get("/getReviews", authController.getReviews);
-router.get("/getPatients", authController.getPatients);
-router.get("/getPatients/:doctorname", authController.getPatientsByDoctorName);
-router.put("/updateHospital", authController.updateHospital);
-router.put("/updateDisease", authController.updateDisease);
-router.delete("/deleteHospital/:hospitalname", authController.deleteHospital);
-router.delete("/deleteDisease/:diseasename", authController.deleteDisease);
-router.delete("/deleteHealthTip/:healthtipname", authController.deleteHealthTip);
-router.delete("/deleteMedicine/:medicinename", authController.deleteMedicine);
+router.post("/login", authController.handleLogin);
+router.get("/getSchoolBus/:email", authController.getSchoolBus);
+router.get("/getRootBus/:email", authController.getRootBus);
+router.delete("/deleteSchoolBus/:id", authController.deleteSchoolBus);
+router.post("/createReview", authController.createReview);
+router.put("/updateSchoolBus", authController.updateSchoolBus);
+router.put("/updateRouteBus", authController.updateRouteBus);
 
 module.exports = router;

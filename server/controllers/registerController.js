@@ -1,58 +1,142 @@
-const Doctor=require('../models/Doctor')
+const SchoolBus = require("../models/SchoolBus");
+const RootBus = require("../models/RootBus");
 const bcrypt = require("bcrypt");
 
-const handleNewDoctor = async (req, res) => {
-  const {username,email, password,phone,address,regnumber,hospital,specialization} = req.body;
-  if (!username || !password || !email || !regnumber  ||!specialization)
-    return res
-      .status(400)
-      .json({ message: "email, username and password is required" });
-
-  const duplicateLecturer=await Doctor.findOne({email:email}).exec()
-  if (duplicateLecturer) return res.status(409).json({ message: "email is already exist" });
-
+const handleNewSchoolBus = async (req, res) => {
   try {
-    const hashedPWD = await bcrypt.hash(password, 10)
+    const {
+      username,
+      email,
+      password,
+      phone,
+      address,
+      idNumber,
+      busNumber,
+      chasisNumber,
+      idFrontImage,
+      idBackImage,
+      busImage,
+    } = req.body;
 
-    const newDoctor = await Doctor.create({
-       "username": username,
-       "email":email,
-       "password": hashedPWD,
-       "phone":phone,
-       "address":address,
-       "regnumber":regnumber,
-       "hospital":hospital,
-       "specialization":specialization,
-    })
+    console.log("Request body:", req.body);
 
-    console.log(newDoctor)
-
-    res.status(200).json({ success: `new doctor with ${username} created` });
-  } catch (error) {
-    res.status(500).json({ error: `${error.message}` });
-  }
-};
-const updateDoctor = async (req, res) => {
-  try {
-    const {username,email, password,phone,address,regnumber,hospital,specialization} = req.body;
-
-    const query = { email };
-
-    const updatedDoctor = await Doctor.findOneAndUpdate(
-      query,
-      { password,phone,address,regnumber,hospital,specialization,username },
-      { new: true }
-    );
-
-    if (!updatedDoctor) {
-      return res.status(404).json({ error: "Hospital not found" });
+    if (
+      !username ||
+      !password ||
+      !email ||
+      !idNumber ||
+      !busNumber ||
+      !chasisNumber ||
+      !idFrontImage ||
+      !idBackImage ||
+      !busImage 
+    ) {
+      return res.status(400).json({ message: "All fields are mandatory" });
     }
 
-    res.status(200).json(updatedDoctor);
+    const duplicateSchoolBus = await SchoolBus.findOne({ email: email }).exec();
+    if (duplicateSchoolBus) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
+
+    const hashedPWD = await bcrypt.hash(password, 10);
+
+    const newSchoolBus = await SchoolBus.create({
+      username,
+      email,
+      password: hashedPWD,
+      phone,
+      address,
+      idNumber,
+      busNumber,
+      chasisNumber,
+      idFrontImage,
+      idBackImage,
+      busImage,
+    });
+
+    console.log("New School Bus:", newSchoolBus);
+
+    res.status(200).json({ success: "Account created" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to update hospital" });
+    console.error("Error creating new school bus:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+const handleNewRootBus = async (req, res) => {
+  try {
+    const {
+      username,
+      email,
+      password,
+      phone,
+      price,
+      address,
+      idNumber,
+      busNumber,
+      chasisNumber,
+      idFrontImage,
+      idBackImage,
+      busImage,
+      departures,
+      arrivals,
+    } = req.body;
+
+    console.log("Request body:", req.body);
+
+    if (
+      !username ||
+      !password ||
+      !email ||
+      !idNumber ||
+      !busNumber ||
+      !chasisNumber ||
+      !idFrontImage ||
+      !idBackImage ||
+      !busImage ||
+      !departures ||
+      !arrivals ||
+      !price 
+    ) {
+      return res.status(400).json({ message: "All fields are mandatory" });
+    }
+
+    const duplicateRootBus = await RootBus.findOne({ email: email }).exec();
+    if (duplicateRootBus) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
+
+    const hashedPWD = await bcrypt.hash(password, 10);
+
+    // Convert departures and arrivals to JSON objects
+    const parsedDepartures = JSON.parse(departures);
+    const parsedArrivals = JSON.parse(arrivals);
+
+    const newRootBus = await RootBus.create({
+      username,
+      email,
+      password: hashedPWD,
+      phone,
+      price,
+      address,
+      idNumber,
+      busNumber,
+      chasisNumber,
+      idFrontImage,
+      idBackImage,
+      busImage,
+      departures: parsedDepartures,
+      arrivals: parsedArrivals,
+    });
+
+    console.log("New Root Bus:", newRootBus);
+
+    res.status(200).json({ success: "Account created" });
+  } catch (error) {
+    console.error("Error creating new root bus:", error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { handleNewDoctor,updateDoctor };
+
+module.exports = { handleNewSchoolBus,handleNewRootBus};
