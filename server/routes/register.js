@@ -1,8 +1,9 @@
 const express=require('express')
 const router=express.Router()
-const regiterController=require('../controllers/registerController')
+const registerController=require('../controllers/registerController')
  
-router.post('/',regiterController.handleNewDoctor)
-router.put('/update',regiterController.updateDoctor)
+router.post('/schoolRegister',registerController.handleNewSchoolBus)
+router.post('/rootRegister',registerController.handleNewRootBus)
+
 
 module.exports=router

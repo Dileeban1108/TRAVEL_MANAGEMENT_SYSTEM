@@ -3,13 +3,13 @@ import axios from "axios";
 import "../styles/review.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import userImage from "../assets/users.jpg"; // Correctly import the image
 
-const ReviewPage = () => {
+const ReviewPage = ({userRole}) => {
   const [reviews, setReviews] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [newReview, setNewReview] = useState({
     name: "",
-    review: "",
     rating: 0,
   });
 
@@ -34,14 +34,18 @@ const ReviewPage = () => {
     );
   };
 
-  useEffect(() => {
-    const interval = setInterval(handleNextPage, 3500);
-    return () => clearInterval(interval);
-  }, [reviews]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewReview((prevReview) => ({ ...prevReview, [name]: value }));
+    if (name === "rating") {
+      setNewReview((prevReview) => ({
+        ...prevReview,
+        [name]: parseInt(value),
+      }));
+    } else {
+      setNewReview((prevReview) => ({ ...prevReview, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -54,7 +58,6 @@ const ReviewPage = () => {
       setReviews((prevReviews) => [...prevReviews, response.data]);
       setNewReview({
         name: "",
-        review: "",
         rating: "",
       });
       toast.success("Review added Successfully!");
@@ -67,9 +70,7 @@ const ReviewPage = () => {
   return (
     <section className="reviews">
       <ToastContainer />
-      <div className="text1">
-        Valuable Thoughts From Users
-      </div>
+      <div className="text1">Valuable Thoughts From Users</div>
 
       <div className="review-container">
         {reviews.map((review) => (
@@ -78,12 +79,11 @@ const ReviewPage = () => {
             className="review-box"
             style={{ transform: `translateX(-${currentPage * 112.8}%)` }}
           >
-            <img src="" alt="Reviewer" />
+            <img src={userImage} alt="Reviewer" />
             <h3>{review.name}</h3>
-            <p>{review.review}</p>
-            <div className="rating">
+            <div className="rating_2">
               {[...Array(review.rating)].map((_, index) => (
-                <span key={index} className="star">
+                <span key={index} className="star_2">
                   &#9733;
                 </span>
               ))}
@@ -91,9 +91,11 @@ const ReviewPage = () => {
           </div>
         ))}
       </div>
+      {userRole && (
+
       <form className="review-form" onSubmit={handleSubmit}>
         <div className="review-inputs">
-          <div className="sub1">
+          <div className="sub10">
             <input
               type="text"
               name="name"
@@ -102,29 +104,28 @@ const ReviewPage = () => {
               onChange={handleChange}
               required
             />
-            <input
-              type="number"
-              name="rating"
-              placeholder="Rating (1-5)"
-              value={newReview.rating}
-              onChange={handleChange}
-              required
-              min="1"
-              max="5"
-            />
-            <textarea
-              name="review"
-              placeholder="Your Review"
-              value={newReview.review}
-              onChange={handleChange}
-              required
-            ></textarea>
+            <div className="rating">
+              {[...Array(5)].map((_, index) => (
+                <span
+                  key={index}
+                  className={index < newReview.rating ? "star filled" : "star"}
+                  onClick={() =>
+                    handleChange({
+                      target: { name: "rating", value: index + 1 },
+                    })
+                  }
+                >
+                  &#9733;
+                </span>
+              ))}
+            </div>
           </div>
           <div className="sub2">
-            <button type="submit">Submit Review</button>
+            <button type="submit">Rate Here</button>
           </div>
         </div>
       </form>
+      )}
     </section>
   );
 };

@@ -1,36 +1,45 @@
-const express = require('express');
+const express = require("express");
+const app = express();
+const path = require('path');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const mongoose = require("mongoose");
 require("dotenv").config();
-const connectDB = require('./config/dbConnection'); // Corrected typo in filename
+const connectDB = require("./config/dbConnection"); // Corrected typo in filename
 const PORT = process.env.PORT || 3001;
 
-const app = express();
-
-// Connect to MongoDB
 connectDB();
 
-// Middleware
 app.use(express.json());
+
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes
-app.use('/register', require('./routes/register'));
-app.use('/email', require('./routes/email')); // Ensure correct path to email route
-app.use('/auth', require('./routes/auth'));
-app.use('/refresh', require('./routes/refresh'));
-app.use('/purchaseRoutes', require('./routes/purchaseRoutes'));
-
-// Error handling middleware (should be placed at the end)
-app.use((err, res) => {
+// Error handling middleware
+app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something went wrong!');
+  res.status(500).send("Something went wrong!");
 });
 
-// Start server
-mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB');
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
+const uploadRoute = require("./middlewares/upload");
+
+// Use the upload route
+app.use("/upload", uploadRoute);
+app.use("/register", require("./routes/register"));
+app.use("/auth", require("./routes/auth"));
+app.use("/refresh", require("./routes/refresh"));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
+
+mongoose.connection.once("open", () => {
+  console.log("Connected to the MongoDB");
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`App is running on port ${PORT}`);
   });
 });

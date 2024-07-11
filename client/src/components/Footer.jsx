@@ -8,31 +8,12 @@ const Footer = () => {
     <footer className="footer">
       <section className="footer-content">
         <div className="footer__section">
-          <h5 className="footer__heading">Join Us Today</h5>
+          <h5 className="footer__heading">Travel Mgt System</h5>
           <p>
-            Empower minds and embrace new learning opportunities with Medicare App. Join us in shaping the future of education!
+            Empower minds and embrace  with Travel Management Syatem. Join us in shaping the future of traveling!
           </p>
         </div>
-        <div className="container_1">
-          <h5 className="footer__heading">Links</h5>
-          <ul className="list-unstyled">
-            <li>
-              <a href="/" className="footer__link">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="login" className="footer__link">
-                Log In
-              </a>
-            </li>
-            <li>
-              <a href="register" className="footer__link">
-                Register
-              </a>
-            </li>
-          </ul>
-        </div>
+        
 
         <div className="container_1">
           <h5 className="footer__heading">Contact Us</h5>

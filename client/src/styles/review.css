@@ -18,31 +18,41 @@
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   font-size: 2rem;
   color: rgb(255, 102, 0);
+  background-color: #ffffff;
 }
-
+@media screen and (max-width: 510px) {
+  .reviews .text1 {
+    font-size: 1.6rem;
+  }
+}
 .review-container {
-  width: 80%;
+  width: 90%;
   height: 80%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  overflow: hidden;
   gap: 3rem;
   margin-top: 2rem;
   z-index: 1;
-  
+  border: 1px solid gray;
+  overflow-x: auto;
+  padding: 10px;
 }
 
 .review-box {
   flex: 0 0 auto;
-  width: 26.5%;
+  width: 200px;
   height: 200px;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
   transition: transform 0.5s ease;
   font-family: sans-serif;
+  border: 1px solid gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+background-color: rgba(0, 0, 0, 0.592);
 }
 
 .review-box img {
@@ -55,14 +65,52 @@
 .review-box h3 {
   margin-bottom: 10px;
 }
-
+.sub2{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sub2 button{
+  background-color: #ff6600;
+  color: #ffffff;
+  width: 40%;
+  height: 40px;
+  border: none;
+}
 .rating {
-  margin-top: 10px;
+width: 50%;
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: rgba(255, 170, 0, 0.707);
+border-radius: 10px;
+}
+
+
+.rating_2 {
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 10px;
+color: #ff6600;
 }
 
 .star {
-  color: #ffd700; /* Gold color for stars */
-  font-size: 20px;
+  color: #ffffff; /* Default color for stars */
+  font-size:35px;
+  cursor: pointer;
+}
+
+.star_2 {
+color: #ff6600;
+font-size:38px;
+ 
+}
+
+.star.filled {
+  color: #ff6600; /* Orange color for filled stars */
 }
 
 .review-inputs {
@@ -81,34 +129,34 @@
 box-shadow: 0 0 5px black;
 
 }
-.sub1 {
+.sub10 {
   width: 100%;
   justify-content: space-between;
   display: flex;
   gap: 10px;
   height: 50px;
 }
-.sub1 input {
-  width: 20%;
+.sub10 input {
+  width: 50%;
   text-align: center;
   border-radius: 10px;
   border: none;
 }
-.sub1 textarea {
+.sub10 textarea {
   width: 70%;
   text-align: center;
   border: none;
   border-radius: 10px;
   padding-top: 1rem;
 }
-.sub2 {
+.sub11 {
   width: 100%;
   display: flex;
   justify-content: center;
   gap: 1rem;
   height: 50px;
 }
-.sub2 button{
+.sub11 button{
   background-color: #ff6600;
   border-radius: 30px;
   font-size: 1rem;
