@@ -5,6 +5,7 @@ import { FaCog } from "react-icons/fa"; // Using react-icons for the settings ic
 import ProfileModal from "../components/ProfileModal";
 import ProfileModal2 from "../components/ProfileModal2";
 import Modal from "../components/Modal"; // Assuming Modal component exists
+import HelpModal from "../components/HelpModal";
 
 const MainPage = ({ userRole, userDetails }) => {
   const [currentPlace, setCurrentPlace] = useState("");
@@ -15,6 +16,7 @@ const MainPage = ({ userRole, userDetails }) => {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showProfileModal2, setShowProfileModal2] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,7 +66,7 @@ const MainPage = ({ userRole, userDetails }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("userinfo");
-    navigate("/");
+    window.location.reload();
   };
 
   return (
@@ -91,7 +93,7 @@ const MainPage = ({ userRole, userDetails }) => {
                 <button onClick={() => handleNavigate("/RootRegister")}>
                   Root Bus Register
                 </button>
-                <button onClick={() => handleNavigate("/about")}>Help</button>
+                <button onClick={() => setIsHelpModalOpen(true)}>Help</button>
                 {userRole && (
                   <>
                     <button onClick={handleUpdateProfileClick}>
@@ -183,6 +185,10 @@ const MainPage = ({ userRole, userDetails }) => {
           </div>
         </Modal>
       )}
+      <HelpModal
+        show={isHelpModalOpen}
+        onClose={() => setIsHelpModalOpen(false)}
+      />
     </section>
   );
 };

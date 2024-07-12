@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const subRoutineSchema = new Schema({
+  departure: { type: String, required: true },
+  destination: { type: String, required: true },
+  price: { type: Number, required: true },
+});
+
 const RootBusSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -26,6 +32,7 @@ const RootBusSchema = new Schema({
       time: { type: String, required: true },
     },
   ],
+  subRoutines: [subRoutineSchema],
 });
 
 module.exports = mongoose.model("RootBus", RootBusSchema);

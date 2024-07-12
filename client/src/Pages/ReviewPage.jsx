@@ -121,7 +121,7 @@ const ReviewPage = ({userRole}) => {
             </div>
           </div>
           <div className="sub2">
-            <button type="submit">Rate Here</button>
+            <button type="submit" className="rate">Rate Here</button>
           </div>
         </div>
       </form>

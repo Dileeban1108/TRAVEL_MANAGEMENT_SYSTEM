@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaCog } from "react-icons/fa";
+import HelpModal from '../components/HelpModal';
 
 const RootRegister = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const RootRegister = () => {
   const [chasisNumber, setChasisNumber] = useState("");
   const [departures, setDepartures] = useState([{ from: "", time: "" }]);
   const [arrivals, setArrivals] = useState([{ to: "", time: "" }]);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,14 +117,30 @@ const RootRegister = () => {
   const handleDepartureChange = (index, event) => {
     const { name, value } = event.target;
     const updatedDepartures = [...departures];
-    updatedDepartures[index][name] = value;
+    if (name === "time") {
+      const [time, period] = value.split(" ");
+      const [hours, minutes] = time.split(":");
+      updatedDepartures[index].hours = hours;
+      updatedDepartures[index].minutes = minutes;
+      updatedDepartures[index].period = period;
+    } else {
+      updatedDepartures[index][name] = value;
+    }
     setDepartures(updatedDepartures);
   };
 
   const handleArrivalChange = (index, event) => {
     const { name, value } = event.target;
     const updatedArrivals = [...arrivals];
-    updatedArrivals[index][name] = value;
+    if (name === "time") {
+      const [time, period] = value.split(" ");
+      const [hours, minutes] = time.split(":");
+      updatedArrivals[index].hours = hours;
+      updatedArrivals[index].minutes = minutes;
+      updatedArrivals[index].period = period;
+    } else {
+      updatedArrivals[index][name] = value;
+    }
     setArrivals(updatedArrivals);
   };
 
@@ -144,24 +162,49 @@ const RootRegister = () => {
   const renderDepartures = () =>
     departures.map((departure, index) => (
       <div key={index} className="more_arrdep">
-        <input
-          type="text"
-          name="from"
-          value={departure.from}
-          onChange={(e) => handleDepartureChange(index, e)}
-          placeholder="Departure from"
-          required
-          className="input-field_3"
-        />
-        <input
-          className="input-field_3"
-          type="text"
-          name="time"
-          value={departure.time}
-          onChange={(e) => handleDepartureChange(index, e)}
-          placeholder="Time"
-          required
-        />
+        <div className="time-input">
+          <input
+            type="text"
+            name="from"
+            value={departure.from}
+            onChange={(e) => handleDepartureChange(index, e)}
+            placeholder="Departure from"
+            required
+            className="input-field_3"
+          />
+          <input
+            className="input-field-small"
+            type="number"
+            name="hours"
+            value={departure.hours}
+            onChange={(e) => handleDepartureChange(index, e)}
+            placeholder="HH"
+            min="1"
+            max="12"
+            required
+          />
+          :
+          <input
+            className="input-field-small"
+            type="number"
+            name="minutes"
+            value={departure.minutes}
+            onChange={(e) => handleDepartureChange(index, e)}
+            placeholder="MM"
+            min="0"
+            max="59"
+            required
+          />
+          <select
+            className="input-field-small_select"
+            name="period"
+            value={departure.period}
+            onChange={(e) => handleDepartureChange(index, e)}
+          >
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
         {index > 0 && (
           <button type="button" onClick={() => handleRemoveDeparture(index)}>
             Remove
@@ -173,32 +216,58 @@ const RootRegister = () => {
   const renderArrivals = () =>
     arrivals.map((arrival, index) => (
       <div key={index} className="more_arrdep">
-        <input
-          className="input-field_3"
-          type="text"
-          name="to"
-          value={arrival.to}
-          onChange={(e) => handleArrivalChange(index, e)}
-          placeholder="Arrival to"
-          required
-        />
-        <input
-          className="input-field_3"
-          type="text"
-          name="time"
-          value={arrival.time}
-          onChange={(e) => handleArrivalChange(index, e)}
-          placeholder="Time"
-          required
-        />
-        {index > 0 && (
-          <button type="button" onClick={() => handleRemoveArrival(index)}>
-            Remove
-          </button>
-        )}
+        <div className="time-input">
+          <input
+            className="input-field_3"
+            type="text"
+            name="to"
+            value={arrival.to}
+            onChange={(e) => handleArrivalChange(index, e)}
+            placeholder="Arrival to"
+            required
+          />
+          <input
+            className="input-field-small"
+            type="number"
+            name="hours"
+            value={arrival.hours}
+            onChange={(e) => handleArrivalChange(index, e)}
+            placeholder="HH"
+            min="1"
+            max="12"
+            required
+          />
+          :
+          <input
+            className="input-field-small"
+            type="number"
+            name="minutes"
+            value={arrival.minutes}
+            onChange={(e) => handleArrivalChange(index, e)}
+            placeholder="MM"
+            min="0"
+            max="59"
+            required
+          />
+          <select
+            className="input-field-small"
+            name="period"
+            value={arrival.period}
+            onChange={(e) => handleArrivalChange(index, e)}
+          >
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+        <div>
+          {index > 0 && (
+            <button type="button" onClick={() => handleRemoveArrival(index)}>
+              Remove
+            </button>
+          )}
+        </div>
       </div>
     ));
-
   const handleNext = () => {
     setStep(step + 1);
   };
@@ -411,6 +480,10 @@ const RootRegister = () => {
       </div>
     </div>
   );
+  const validateTime = (timeStr) => {
+    const regex = /^(1[0-2]|0?[1-9]):[0-5][0-9] (AM|PM)$/i; // HH:MM AM/PM format
+    return regex.test(timeStr);
+  };
 
   return (
     <div className="r_container_2">
@@ -423,19 +496,19 @@ const RootRegister = () => {
           />
         </div>
         {isSettingsOpen && (
-              <div className="settings-menu">
-                <button onClick={() => navigate("/")}>Home</button>
-                <button onClick={() => navigate("/busFares")}>Bus Fares</button>
-                <button onClick={() => navigate("/SchoolRegister")}>
-                  School Bus Register
-                </button>
-                <button onClick={() => navigate("/RootRegister")}>
-                  Root Bus Register
-                </button>
-                <button onClick={() => navigate("/about")}>Help</button>
-                <button onClick={handleLogout}>Log Out</button>
-              </div>
-            )}
+          <div className="settings-menu">
+            <button onClick={() => navigate("/")}>Home</button>
+            <button onClick={() => navigate("/busFares")}>Bus Fares</button>
+            <button onClick={() => navigate("/SchoolRegister")}>
+              School Bus Register
+            </button>
+            <button onClick={() => navigate("/RootRegister")}>
+              Root Bus Register
+            </button>
+            <button onClick={()=>setIsHelpModalOpen(true)}>Help</button>
+            <button onClick={handleLogout}>Log Out</button>
+          </div>
+        )}
         <div className="r_main_container_2">
           <form className="r_form_2" onSubmit={handleSubmit}>
             {step === 2 && renderStepOne()}
@@ -443,6 +516,8 @@ const RootRegister = () => {
           </form>
         </div>
       </div>
+      <HelpModal show={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
+
     </div>
   );
 };

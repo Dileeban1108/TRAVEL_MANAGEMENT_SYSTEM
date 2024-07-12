@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaCog } from "react-icons/fa";
+import HelpModal from '../components/HelpModal';
 
 const SchoolRegister = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const SchoolRegister = () => {
   const [idNumber, setIdNumber] = useState("");
   const [busNumber, setBusNumber] = useState("");
   const [chasisNumber, setChasisNumber] = useState("");
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -310,7 +312,7 @@ const SchoolRegister = () => {
             <button onClick={() => navigate("/RootRegister")}>
               Root Bus Register
             </button>
-            <button onClick={() => navigate("/about")}>Help</button>
+            <button onClick={()=>setIsHelpModalOpen(true)}>Help</button>
             <button onClick={handleLogout}>Log Out</button>
           </div>
         )}
@@ -322,6 +324,8 @@ const SchoolRegister = () => {
           </form>
         </div>
       </div>
+      <HelpModal show={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
+
     </div>
   );
 };
