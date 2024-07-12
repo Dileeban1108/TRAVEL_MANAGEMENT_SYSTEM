@@ -3,9 +3,11 @@
 A management system created using the MERN stack.
 
 ## Features
-- There are two main roles in this Web Application:
+- There are three main roles in this Web Application:
    - **School Bus Drivers**
    - **Route Bus Drivers**
+   - **Normal Users** 
+
 - **School Bus Drivers** can:
    - Add a new Routine
    - Update the profile
@@ -13,7 +15,10 @@ A management system created using the MERN stack.
 - **Route Bus Drivers** can:
    - Add a new Routine
    - Update the profile
-
+     
+- **Normal Users** can:
+   - select their Routine
+   - get a reciept after successfull payment
 - User authentication and authorization
 
 ## Technologies Used
@@ -31,7 +36,7 @@ A management system created using the MERN stack.
 ## Run the Backend
 1. Open a new terminal and Copy and Paste
    ```sh
-   cd servers
+   cd server
    npm install   
    npm start
    
