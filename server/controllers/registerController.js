@@ -1,5 +1,6 @@
 const SchoolBus = require("../models/SchoolBus");
 const RootBus = require("../models/RootBus");
+const Card = require("../models/Card");
 const bcrypt = require("bcrypt");
 
 const handleNewSchoolBus = async (req, res) => {
@@ -137,6 +138,21 @@ const handleNewRootBus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const addNewCard = async (req, res) => {
+  try {
+    const { cardNumber, expDate, price, cvv } = req.body;
+
+    if (!cardNumber || !expDate  || !price || !cvv) {
+      return res.status(400).json({ message: "All fields are mandatory" });
+    }
+
+    const newCard = await Card.create({ cardNumber, expDate, price, cvv });
+
+    res.status(200).json({ success: "Card created" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 
-module.exports = { handleNewSchoolBus,handleNewRootBus};
+module.exports = { addNewCard,handleNewSchoolBus,handleNewRootBus};
