@@ -4,6 +4,53 @@ const Review = require("../models/Review");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const addSubRoutine = async (req, res) => {
+  const { busId } = req.params;
+  const { departure, destination, price } = req.body;
+
+  try {
+    const bus = await RootBus.findById(busId);
+    if (!bus) {
+      return res.status(404).json({ message: "Bus not found" });
+    }
+
+    const newSubRoutine = {
+      departure,
+      destination,
+      price
+    };
+
+    bus.subRoutines.push(newSubRoutine);
+    await bus.save();
+
+    res.status(200).json(bus);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+const deleteSubRoutine = async (req, res) => {
+  const { busId ,subRoutineIndex} = req.params;
+
+  try {
+    const bus = await RootBus.findById(busId);
+    if (!bus) {
+      return res.status(404).json({ message: "Bus not found" });
+    }
+
+    if (subRoutineIndex < 0 || subRoutineIndex >= bus.subRoutines.length) {
+      return res.status(400).json({ message: "Invalid sub-routine index" });
+    }
+
+    bus.subRoutines.splice(subRoutineIndex, 1);
+    await bus.save();
+
+    res.status(200).json(bus);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 const getSchoolBuses = async (req, res) => {
   try {
     const result = await SchoolBus.find();
@@ -257,5 +304,7 @@ module.exports = {
   deleteSchoolBus,
   updateRouteBus,
   updateSchoolBus,
-  createReview
+  createReview,
+  deleteSubRoutine,
+  addSubRoutine
 };

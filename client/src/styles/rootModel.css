@@ -29,15 +29,15 @@
   background-color: #d32f2f;
 }
 
-ul {
+.ul {
   list-style: none;
   border: 1px solid orangered;
   border-radius: 5px;
   height: 100%;
   overflow-y: scroll;
-  padding: 10px;
+padding: 10px;
 }
-ul li h3 {
+.ul li h3 {
   width: 100%;
   background-color: #ff5900;
   color: #ffffff;
@@ -45,16 +45,16 @@ ul li h3 {
   padding: 5px;
   border-radius: 5px;
 }
-ul li {
+.ul li {
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #f9f9f9;
+  background-color: rgba(0, 0, 0, 0.034);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 5px;
-  margin-top: 10px;
+  padding: 10px;
+  margin-bottom: 30px;
 }
 .sub3 {
   display: flex;
@@ -99,6 +99,87 @@ ul li {
   box-shadow: 0 0 2px gray;
   padding: 5px;
 }
+.divv_2 {
+  width: 100%;
+}
+
+.custom-dropdown {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  position: relative;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.dropdown-header:hover {
+  background-color: #5958583b;
+}
+.dropdown-body {
+  display: flex;
+  flex-direction: column;
+  max-height: 200px;
+  overflow-y: auto;
+  gap: 5px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eaeaea;
+padding: 3px;
+}
+.dropdown-item:hover {
+  background-color: #6767677e;
+}
+.option {
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+
+.option .h3 {
+  background-color: #ccc;
+  border-radius: 0;
+  color: #ff0000;
+  width:30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media screen and (max-width: 600px) {
+  .option .h3 {
+    font-size: 0.8rem;
+  }
+}
+@media screen and (max-width: 400px) {
+  .option .h3 {
+    font-size: 0.6rem;
+  } 
+}
+
+.delete_btn_2 {
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
 @media screen and (max-width: 600px) {
   .sub2 .divv {
     font-size: 0.9rem;
@@ -107,7 +188,7 @@ ul li {
 @media screen and (max-width: 400px) {
   .sub2 .divv {
     font-size: 0.7rem;
-  }
+  } 
 }
 .mainModal {
   height: 99vh;
@@ -131,7 +212,7 @@ ul li {
   justify-content: center;
   align-items: center;
 }
-.heading .bookicon {
+ .bookicon {
   color: rgb(255, 72, 0);
   display: flex;
   justify-content: center;
@@ -141,6 +222,11 @@ ul li {
   background-color: rgb(185, 187, 189);
   border-radius: 5px;
   cursor: pointer;
+  width: 30px;
+}
+.div_2 {
+  width: 100%;
+  display: flex;
 }
 .dep1 {
   display: flex;
@@ -149,8 +235,8 @@ ul li {
   justify-content: center;
   align-items: center;
 }
-.dipheading{
-  background-color: #ff5900;
+.dipheading {
+  background-color: #ff590073;
   color: #ffffff;
   width: 100%;
   text-align: center;
@@ -168,7 +254,7 @@ ul li {
   border: 1px solid black;
   border-radius: 5px;
   overflow-x: hidden;
-  padding: 2px;
+  gap: 10px;
 }
 .arr1 {
   height: auto;
@@ -201,4 +287,36 @@ ul li {
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+.subroutines {
+  display: flex;
+  width: 100%;
+  box-shadow: 0 0 2px gray;
+  height: 40px;
+}
+.subroutines input {
+  width: 30%;
+  border-radius: 5px;
+  border: none;
+  background-color: antiquewhite;
+  text-align: center;
+  margin: 2px;
+}
+
+.addroutoine {
+  border-radius: 5px;
+  background-color: #ff5900db;
+  cursor: pointer;
+  color: #ffffff;
+  border: none;
+  width: 20%;
+}
+.subrotes{
+  text-align: center;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ff0000;
+  font-weight: bold;
 }

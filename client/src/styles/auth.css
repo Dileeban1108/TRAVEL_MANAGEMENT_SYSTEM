@@ -240,7 +240,12 @@ input[type="file"] {
 .more_arrdep {
   overflow-y: scroll;
   display: flex;
-  gap: 10px;
+  padding: 5px;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  align-items: center;
+  justify-content: space-between;
 }
 .departures {
   text-align: center;
@@ -288,3 +293,10 @@ input[type="file"] {
     height: 30px;
   }
 }
+.time-input{
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  gap: 5px;
+}
+
