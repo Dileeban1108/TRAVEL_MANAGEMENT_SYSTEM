@@ -63,7 +63,7 @@ padding: 10px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin-top: 5px;
+
 }
 .sub1 {
   height: 150px;
@@ -211,6 +211,9 @@ padding: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #ff5900;
+  color: #ffffff;
+  padding: 2px;
 }
  .bookicon {
   color: rgb(255, 72, 0);

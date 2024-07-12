@@ -106,7 +106,7 @@ const SchoolBusModal = ({ onClose }) => {
             style={{ width: "80%", backgroundColor: "#ff91003f" }}
           />
         </div>
-        <ul>
+        <ul className="ul">
           {filteredBuses.map((bus, index) => (
             <li key={index}>
               <div className="heading">

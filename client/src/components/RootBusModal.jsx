@@ -102,7 +102,6 @@ const RootBusModal = ({ onClose }) => {
     setSelectedBus(bus);
     setSelectedPrice(price);
   };
-  
 
   const handleCloseCardModal = () => {
     setShowCardModal(false);
@@ -208,13 +207,15 @@ const RootBusModal = ({ onClose }) => {
                 <h3>
                   {bus.departures[0].from} - {bus.arrivals[0].to}
                 </h3>
-                <FaBook
-                  onClick={() => handleBookClick(bus)}
-                  className="bookicon"
-                />
-                {userDetails.email === bus.email && (
+
+                {userDetails.email === bus.email ? (
                   <FaTrash
                     onClick={() => handleDelete(bus._id)}
+                    className="bookicon"
+                  />
+                ) : (
+                  <FaBook
+                    onClick={() => handleBookClick(bus)}
                     className="bookicon"
                   />
                 )}
@@ -298,14 +299,13 @@ const RootBusModal = ({ onClose }) => {
                                 />
                               </span>
                               {userDetails.email === bus.email && (
-                                <button
-                                  className="delete_btn_2"
+                                <FaTrash
                                   onClick={() =>
                                     deleteSubRoutine(bus._id, subIndex)
                                   }
-                                >
-                                  Delete
-                                </button>
+                                  className="bookicon"
+                                  style={{marginLeft:"4px"}}
+                                />
                               )}
                             </div>
                           ))}

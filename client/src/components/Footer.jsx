@@ -26,7 +26,7 @@ const Footer = () => {
             </NavLink>
             or
             <NavLink to="">
-              <FaPhone />:+94 76 456 3333
+              <FaPhone />:+94 76 756 6677
             </NavLink>
 
           </ul>
