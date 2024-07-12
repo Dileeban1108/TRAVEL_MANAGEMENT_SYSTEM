@@ -1,17 +1,18 @@
-// In CardModal component
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { jsPDF } from "jspdf";
 import "../styles/cardModal.css";
+import axios from "axios";
 
 const CardModal = ({ onClose, rootDetails }) => {
+  const [price, setPrice] = useState("");
+  const [receipt, setReceipt] = useState(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-    watch,
   } = useForm();
-  const [price, setPrice] = useState("");
 
   useEffect(() => {
     if (rootDetails) {
@@ -19,33 +20,39 @@ const CardModal = ({ onClose, rootDetails }) => {
     }
   }, [rootDetails]);
 
-  const watchExpiryDate = watch("expiryDate", "");
-
-  useEffect(() => {
-    if (watchExpiryDate.length === 2 && !watchExpiryDate.includes("/")) {
-      setValue("expiryDate", `${watchExpiryDate}/`);
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:3001/register/addNewCard", {
+        cardNumber: data.cardNumber,
+        price,
+        cvv: data.cvv,
+        expDate: data.expDate,
+      });
+      const uniqueNumber = Math.random().toString(36).substring(2, 15);
+      setReceipt({
+        uniqueNumber,
+        cardNumber: data.cardNumber,
+        expDate: data.expDate,
+        cvv: data.cvv,
+        price,
+      });
+    } catch (error) {
+      console.error("Error submitting card details:", error);
     }
-  }, [watchExpiryDate, setValue]);
-
-  const onSubmit = (data) => {
-    console.log(data);
-    // Handle card details submission
-    printReceipt(data);
   };
 
-  const printReceipt = (data) => {
-    const receipt = `
-      Payment Successful!
-      Unique Number: ${Math.random().toString(36).substring(2, 15)}
-      Card Number: ${data.cardNumber}
-      Expiry Date: ${data.expiryDate}
-      CVV: ${data.cvv}
-      Amount: ${price}
-      Root Details: ${JSON.stringify(rootDetails)}
-    `;
-    console.log(receipt);
-    // You can replace this with actual printing logic
-    alert(receipt);
+  const closeReceipt = () => {
+    setReceipt(null);
+  };
+
+  const downloadReceipt = () => {
+    const doc = new jsPDF();
+    doc.text("Payment Successful!", 10, 10);
+    doc.text(`Reference Number: ${receipt.uniqueNumber}`, 10, 20);
+    doc.text(`Card Number: ${receipt.cardNumber}`, 10, 30);
+    doc.text(`Expiry Date: ${receipt.expDate}`, 10, 40);
+    doc.text(`Amount: ${receipt.price}`, 10, 50);
+    doc.save("receipt.pdf");
   };
 
   return (
@@ -61,46 +68,27 @@ const CardModal = ({ onClose, rootDetails }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <input
-            placeholder="Card Number [0000 0000 0000 0000]"
+              placeholder="Card Number [0000 0000 0000 0000]"
               type="text"
-              {...register("cardNumber", {
-                required: true,
-                pattern: /^\d{16}$/,
-              })}
+              {...register("cardNumber", { required: true, pattern: /^\d{16}$/ })}
             />
-            {errors.cardNumber && (
-              <p className="error">
-                Card number is required and should be 16 digits
-              </p>
-            )}
+            {errors.cardNumber && <p className="error">Please enter a valid 16-digit card number.</p>}
           </div>
           <div className="form-group">
             <input
-            placeholder="Expiry Date [mm / yy]"
+              placeholder="Expiry Date [mm/yy]"
               type="text"
-              {...register("expiryDate", {
-                required: true,
-                pattern: /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/,
-              })}
+              {...register("expDate", { required: true, pattern: /^(0[1-9]|1[0-2])\/?([0-9]{2})$/ })}
             />
-            {errors.expiryDate && (
-              <p className="error">
-                Expiry date is required and should be in MM/YY format
-              </p>
-            )}
+            {errors.expDate && <p className="error">Please enter a valid expiry date (MM/YY).</p>}
           </div>
           <div className="form-group">
             <input
-            placeholder="CVV"
+              placeholder="CVV"
               type="text"
-              {...register("cvv", {
-                required: true,
-                pattern: /^[0-9]{3,4}$/,
-              })}
+              {...register("cvv", { required: true, pattern: /^[0-9]{3,4}$/ })}
             />
-            {errors.cvv && (
-              <p className="error">CVV is required and should be 3 or 4 digits</p>
-            )}
+            {errors.cvv && <p className="error">Please enter a valid CVV (3-4 digits).</p>}
           </div>
           <div className="form-group">
             <input type="text" value={price} readOnly />
@@ -110,6 +98,22 @@ const CardModal = ({ onClose, rootDetails }) => {
           </button>
         </form>
       </div>
+
+      {receipt && (
+        <div className="receipt-popup">
+          <div className="receipt-content">
+            <h3>Payment Successful!</h3>
+            <p>Reference Number: {receipt.uniqueNumber}</p>
+            <p>Card Number: {receipt.cardNumber}</p>
+            <p>Expiry Date: {receipt.expDate}</p>
+            <p>Amount: {receipt.price}</p>
+            <button className="close-button" onClick={closeReceipt}>Close</button>
+            <button className="download-button" onClick={downloadReceipt}>
+              Download Receipt
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
