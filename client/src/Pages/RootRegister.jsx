@@ -23,13 +23,25 @@ const RootRegister = () => {
   const [idNumber, setIdNumber] = useState("");
   const [busNumber, setBusNumber] = useState("");
   const [chasisNumber, setChasisNumber] = useState("");
-  const [departures, setDepartures] = useState([{ from: "", time: "" }]);
-  const [arrivals, setArrivals] = useState([{ to: "", time: "" }]);
+  const [departures, setDepartures] = useState([{ from: '', hours: '', minutes: '', period: 'AM' }]);
+  const [arrivals, setArrivals] = useState([{ to: '', hours: '', minutes: '', period: 'AM' }]);
+  
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Construct the time field for departures and arrivals
+    const updatedDepartures = departures.map(dep => ({
+      ...dep,
+      time: `${dep.hours}:${dep.minutes} ${dep.period}`
+    }));
+  
+    const updatedArrivals = arrivals.map(arr => ({
+      ...arr,
+      time: `${arr.hours}:${arr.minutes} ${arr.period}`
+    }));
+  
     const formData = new FormData();
     formData.append("idFrontImage", idFrontImage);
     formData.append("idBackImage", idBackImage);
@@ -43,9 +55,9 @@ const RootRegister = () => {
     formData.append("idNumber", idNumber);
     formData.append("busNumber", busNumber);
     formData.append("chasisNumber", chasisNumber);
-    formData.append("departures", JSON.stringify(departures)); // convert to JSON string
-    formData.append("arrivals", JSON.stringify(arrivals)); // convert to JSON string
-
+    formData.append("departures", JSON.stringify(updatedDepartures)); // convert to JSON string
+    formData.append("arrivals", JSON.stringify(updatedArrivals)); // convert to JSON string
+  
     try {
       const uploadResponse = await axios.post(
         "http://localhost:3001/upload",
@@ -56,9 +68,9 @@ const RootRegister = () => {
           },
         }
       );
-
+  
       const { idFrontImage, idBackImage, busImage } = uploadResponse.data;
-
+  
       const response = await axios.post(
         "http://localhost:3001/register/rootRegister",
         {
@@ -74,8 +86,8 @@ const RootRegister = () => {
           idFrontImage,
           idBackImage,
           busImage,
-          departures: JSON.stringify(departures), // convert to JSON string
-          arrivals: JSON.stringify(arrivals), // convert to JSON string
+          departures: JSON.stringify(updatedDepartures), // convert to JSON string
+          arrivals: JSON.stringify(updatedArrivals), // convert to JSON string
         },
         {
           headers: {
@@ -83,7 +95,7 @@ const RootRegister = () => {
           },
         }
       );
-
+  
       console.log("Registration response:", response.data);
       navigate("/");
       // Handle success or other logic here
@@ -92,6 +104,7 @@ const RootRegister = () => {
       // Handle error responses here
     }
   };
+  
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
   };
@@ -117,32 +130,17 @@ const RootRegister = () => {
   const handleDepartureChange = (index, event) => {
     const { name, value } = event.target;
     const updatedDepartures = [...departures];
-    if (name === "time") {
-      const [time, period] = value.split(" ");
-      const [hours, minutes] = time.split(":");
-      updatedDepartures[index].hours = hours;
-      updatedDepartures[index].minutes = minutes;
-      updatedDepartures[index].period = period;
-    } else {
-      updatedDepartures[index][name] = value;
-    }
+    updatedDepartures[index][name] = value;
     setDepartures(updatedDepartures);
   };
-
+  
   const handleArrivalChange = (index, event) => {
     const { name, value } = event.target;
     const updatedArrivals = [...arrivals];
-    if (name === "time") {
-      const [time, period] = value.split(" ");
-      const [hours, minutes] = time.split(":");
-      updatedArrivals[index].hours = hours;
-      updatedArrivals[index].minutes = minutes;
-      updatedArrivals[index].period = period;
-    } else {
-      updatedArrivals[index][name] = value;
-    }
+    updatedArrivals[index][name] = value;
     setArrivals(updatedArrivals);
   };
+  
 
   const handleRemoveDeparture = (index) => {
     const updatedDepartures = [...departures];

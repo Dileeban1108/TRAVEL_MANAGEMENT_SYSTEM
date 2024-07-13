@@ -133,7 +133,6 @@ const RootBusModal = ({ onClose }) => {
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   };
-
   const addSubRoutine = async (busId) => {
     try {
       const response = await axios.post(
@@ -153,7 +152,6 @@ const RootBusModal = ({ onClose }) => {
       console.error("Failed to add sub-routine:", error);
     }
   };
-
   const deleteSubRoutine = async (busId, subRoutineIndex) => {
     try {
       const response = await axios.delete(
@@ -224,7 +222,7 @@ const RootBusModal = ({ onClose }) => {
                 <div className="sub2">
                   <div className="divv">Vehicle Number: {bus.busNumber}</div>
                   <div className="divv">Contact Number: {bus.phone}</div>
-                  <div className="divv">Fee: {bus.price}</div>
+                  <div className="divv">Fee: Rs.{bus.price}.00</div>
                   {userDetails.email === bus.email && (
                     <div className="subroutines">
                       <input

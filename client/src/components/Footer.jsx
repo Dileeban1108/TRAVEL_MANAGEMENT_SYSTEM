@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/footer.css";
-import { FaFacebook, FaInstagram ,FaPhone } from "react-icons/fa";
+import { FaFacebook, FaGithub, FaInstagram ,FaLinkedin,FaPhone } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
 const Footer = () => {
@@ -18,11 +18,11 @@ const Footer = () => {
         <div className="container_1">
           <h5 className="footer__heading">Contact Us</h5>
           <ul className="icons-list">
-            <NavLink to="">
-              <FaFacebook />
+            <NavLink to="https://www.linkedin.com/in/dileebanli2001/">
+              <FaLinkedin />
             </NavLink>
-            <NavLink to="">
-              <FaInstagram />
+            <NavLink to="https://github.com/Dileeban1108">
+              <FaGithub />
             </NavLink>
             or
             <NavLink to="">

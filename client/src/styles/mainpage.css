@@ -214,6 +214,22 @@
   border-radius: 5px;
   margin-left: 20px;
 }
+@media screen and (max-width: 800px) {
+  .orlogin  {
+    font-size: .8rem;
+  }
+}
+@media screen and (max-width: 660px) {
+  .orlogin  {
+    font-size: .7rem;
+  }
+}
+@media screen and (max-width: 590px) {
+  .orlogin  {
+    font-size: .6rem;
+  }
+}
+
 .registration-modal {
   width: 100%;
   height: 100%;
@@ -222,11 +238,23 @@
   justify-content: center;
   align-items: center;
 }
+
+
 .registration-modal p {
   color: #ff5500;
   font-size: 1.5rem;
   text-align: center;
   font-family: Georgia, "Times New Roman", Times, serif;
+}
+@media screen and (max-width: 800px) {
+  .registration-modal p{    
+    font-size: 1.2rem;
+  }
+}
+@media screen and (max-width: 660px) {
+  .registration-modal p{    
+    font-size: 1rem;
+  }
 }
 .modal_header {
   display: flex;
@@ -251,6 +279,12 @@
   justify-content: center;
   align-items: center;
 }
+@media screen and (max-width: 800px) {
+  .close {
+    width: 30px;
+    height: 30px; 
+   }
+}
 .modal-buttons {
   height: 80%;
   display: flex;
@@ -258,6 +292,7 @@
   align-items: center;
   width: 100%;
 }
+
 .option_btns {
   width: 40%;
   height: 50%;
@@ -266,6 +301,17 @@
   border-radius: 10px;
   border: none;
 }
+@media screen and (max-width: 800px) {
+  .option_btns {
+    font-size: 1rem;
+  }
+}
+@media screen and (max-width: 660px) {
+  .option_btns {
+    font-size: .8rem;
+  }
+}
+
 .btn1 {
   background-color: #ff4d00;
   color: #feffff;

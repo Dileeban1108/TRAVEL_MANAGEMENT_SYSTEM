@@ -35,7 +35,7 @@ const handleNewSchoolBus = async (req, res) => {
       return res.status(400).json({ message: "All fields are mandatory" });
     }
 
-    const duplicateSchoolBus = await SchoolBus.findOne({ email: email }).exec();
+    const duplicateSchoolBus = await SchoolBus.findOne({ email }).exec();
     if (duplicateSchoolBus) {
       return res.status(409).json({ message: "Email already exists" });
     }
@@ -64,6 +64,7 @@ const handleNewSchoolBus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 const handleNewRootBus = async (req, res) => {
   try {
     const {
@@ -102,16 +103,23 @@ const handleNewRootBus = async (req, res) => {
       return res.status(400).json({ message: "All fields are mandatory" });
     }
 
-    const duplicateRootBus = await RootBus.findOne({ email: email }).exec();
+    const duplicateRootBus = await RootBus.findOne({ $or: [{ email }, { chasisNumber }, { busNumber },{idFrontImage},{idBackImage}] }).exec();
     if (duplicateRootBus) {
-      return res.status(409).json({ message: "Email already exists" });
+      return res.status(409).json({ message: "Check your credentials" });
     }
 
     const hashedPWD = await bcrypt.hash(password, 10);
 
     // Convert departures and arrivals to JSON objects
-    const parsedDepartures = JSON.parse(departures);
-    const parsedArrivals = JSON.parse(arrivals);
+    const parsedDepartures = JSON.parse(departures).map(dep => ({
+      ...dep,
+      time: `${dep.hours}:${dep.minutes} ${dep.period}`,
+    }));
+
+    const parsedArrivals = JSON.parse(arrivals).map(arr => ({
+      ...arr,
+      time: `${arr.hours}:${arr.minutes} ${arr.period}`,
+    }));
 
     const newRootBus = await RootBus.create({
       username,
@@ -138,11 +146,12 @@ const handleNewRootBus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 const addNewCard = async (req, res) => {
   try {
     const { cardNumber, expDate, price, cvv } = req.body;
 
-    if (!cardNumber || !expDate  || !price || !cvv) {
+    if (!cardNumber || !expDate || !price || !cvv) {
       return res.status(400).json({ message: "All fields are mandatory" });
     }
 
@@ -154,5 +163,4 @@ const addNewCard = async (req, res) => {
   }
 };
 
-
-module.exports = { addNewCard,handleNewSchoolBus,handleNewRootBus};
+module.exports = { addNewCard, handleNewSchoolBus, handleNewRootBus };
